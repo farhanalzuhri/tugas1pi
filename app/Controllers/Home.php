@@ -14,17 +14,16 @@ class Home extends BaseController
 
 	public function index()
 	{
-		$home = $this->homeModel->findAll();
-		var_dump($home);
-
-		return view('killjoy/index');
+		$user = $this->homeModel->findAll();
+		$data = [
+			'users' => $user
+		];
+		
+		echo view('killjoy/index', $data);
+		
 	}
 	public function create()
 	{
-		$data = [
-			'title' =>'form pendaftaran killjoy Bootcamp'
-		];
-
 		return view('killjoy/create');
 	}
 
@@ -45,13 +44,14 @@ class Home extends BaseController
 		
 		return redirect()->to('/home');
 	}
-	public function edit()
+	public function edit($id)
 	{
+		$userId = $this->homeModel->find($id);
 		$data = [
-			'title' =>'form pendaftaran killjoy Bootcamp'
+			'userId' => $userId
 		];
-
-		return view('killjoy/update');
+		
+		echo view('killjoy/edit' ,$data);
 	}
 
 	public function update($id){
@@ -69,10 +69,12 @@ class Home extends BaseController
 		]);
 
 		session()->setFlashdata('pesan','Data berhasil diubah');
+		return redirect()->to('/home');
 	}
 
 	public function delete($id){
 		$this->homeModel->delete($id);
+		session()->setFlashdata('pesan','Data berhasil dihapus');
 		return redirect()->to('/home');
 	}
 }
